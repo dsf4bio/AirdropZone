@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyDropZone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        
+    <style>
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #00bfff;
+            /* Azzurro neon */
+            --text-color: #ffffff;
+            /* Testo bianco */
+            --font-family: 'Orbitron', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            position: relative;
+            /* Per posizionare gli elementi in modo assoluto */
+        }
+
+        /* Sfondo con flusso di energia */
+        .energy-stream {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(to bottom, rgba(0, 191, 255, 0.1), rgba(0, 0, 0, 0.8));
+            /* Sovrapposizione leggera */
+        }
+
+        .energy-stream span {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            animation: energyFlow linear infinite;
+        }
+
+        @keyframes energyFlow {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+            }
+
+            100% {
+                transform: translate(50vw, 50vh) scale(1);
+            }
+        }
+
+        /* Stili per il titolo (fisso in alto) */
+        .title {
+            font-size: 3rem;
+            font-weight: 300;
+            color: var(--secondary-color);
+            text-align: center;
+            letter-spacing: 0.2em;
+            text-shadow: 0 0 10px var(--secondary-color);
+            /* Ombra luminosa */
+            position: absolute;
+            top: 10%;
+            /* Posizionato al 10% dall'alto */
+            transform: translateY(-50%);
+            z-index: 1;
+            /* Sopra agli altri elementi */
+        }
+
+        /* Disposizione delle carte (sotto il titolo) */
+        .card-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            /* Utilizza tutta la larghezza disponibile */
+            max-width: 1200px;
+            /* Larghezza massima */
+            perspective: 800px;
+            z-index: 1;
+            margin-top: 0;
+            /* Reset del margin-top */
+        }
+
+        /* Spaziatura tra le card */
+        .card {
+            width: 308px;
+            /* Larghezza tipica di una carta di credito */
+            height: 187px;
+            /* Altezza proporzionata */
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            margin: 0 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            /* Importante per l'animazione */
+            color: var(--text-color);
+            border: none;
+            /* Rimozione bordi fissi */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Colori icone */
+        .card:nth-child(1) i {
+            color: #ff4081;
+        }
+
+        /* Rosa */
+        .card:nth-child(2) i {
+            color: #00ff88;
+        }
+
+        /* Verde */
+        .card:nth-child(3) i {
+            color: #00bfff;
+        }
+
+        /* Azzurro */
+        .card {
+            margin: 0 4%;
+            /* Spaziatura del 15% */
+        }
+
+        .card:nth-child(1) {
+            animation: neonBorderRosa 3s linear infinite;
+        }
+
+        .card:nth-child(2) {
+            animation: neonBorderVerde 3s linear infinite;
+        }
+
+        .card:nth-child(3) {
+            animation: neonBorderAzzurro 3s linear infinite;
+        }
+
+        /* Animazioni bordi neon (più vistose) */
+        @keyframes neonBorderRosa {
+            0% {
+                box-shadow: 0 0 15px rgba(255, 64, 129, 0.7);
+                /* Rosa */
+            }
+
+            50% {
+                box-shadow: 0 0 25px rgba(255, 64, 129, 0.9);
+                /* Rosa */
+            }
+
+            100% {
+                box-shadow: 0 0 15px rgba(255, 64, 129, 0.7);
+                /* Rosa */
+            }
+        }
+
+        @keyframes neonBorderVerde {
+            0% {
+                box-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
+                /* Verde */
+            }
+
+            50% {
+                box-shadow: 0 0 25px rgba(0, 255, 136, 0.9);
+                /* Verde */
+            }
+
+            100% {
+                box-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
+                /* Verde */
+            }
+        }
+
+        @keyframes neonBorderAzzurro {
+            0% {
+                box-shadow: 0 0 15px rgba(0, 191, 255, 0.7);
+                /* Azzurro */
+            }
+
+            50% {
+                box-shadow: 0 0 25px rgba(0, 191, 255, 0.9);
+                /* Azzurro */
+            }
+
+            100% {
+                box-shadow: 0 0 15px rgba(0, 191, 255, 0.7);
+                /* Azzurro */
+            }
+        }
+
+        /* Stile per i titoli delle card */
+        .card-title {
+            font-size: 1rem;
+            /* Ridotto del 15% */
+            font-weight: 400;
+            color: var(--text-color);
+            display: block;
+            position: relative;
+            /* Necessario per posizionare il cursore */
+            height: 1.2em;
+            /* Altezza per allineare il cursore */
+        }
+
+        i {
+            text-shadow: 0 0 5px var(--secondary-color);
+        }
+
+        .card-title-animation {
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Stili per le icone delle card */
+        .card i {
+            font-size: 1.7rem;
+            /* Ridotto del 15% */
+            margin-bottom: 10px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        /* Stili per il pulsante (fisso in basso) */
+        .connect-wallet-btn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: var(--primary-color);
+            background-color: var(--secondary-color);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: absolute;
+            bottom: 10%;
+            /* Posizionato al 10% dal basso */
+            transform: translateY(50%);
+            /* Sposta il pulsante verso l'alto per centrarlo verticalmente */
+            box-shadow: 0 0 20px var(--secondary-color);
+            /* Effetto luminoso */
+            z-index: 1;
+        }
+        /* Modale */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #333;
+            border: 1px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 2rem;
+            width: 80%;
+            max-width: 500px;
+            color: var(--secondary-color);
+            position: relative;
+        }
+
+        .wallet-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .wallet-button {
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            background-color: var(--secondary-color);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .wallet-button:hover {
+            background-color: #6c757d;
+            transform: translateY(-3px);
+        }
+
+        .wallet-button img {
+            height: 2rem;
+            width: auto;
+            margin-right: 0.5rem;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            color: #aaa;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="energy-stream"></div>
+    <h1 class="title">EasyDropZone</h1>
+    <section class="card-container">
+        <div class="card">
+            <i class="fa-solid fa-coins"></i>
+            <h2 class="card-title" id="ethereum-title">EASY</h2>
+        </div>
+        <div class="card">
+            <i class="fa-solid fa-parachute-box"></i>
+            <h2 class="card-title" id="solana-title">DROP</h2>
+        </div>
+        <div class="card">
+            <i class="fa-solid fa-chart-line"></i>
+            <h2 class="card-title" id="polygon-title">ZONE</h2>
+        </div>
+    </section>
+    <button class="connect-wallet-btn" onclick="openModal()">Connect Wallet</button>
+    <div id="walletModal" class="modal" onclick="closeModal(event)">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal(event)">&times;</span>
+            <h2>Connect to Wallet</h2>
+            <div class="wallet-options">
+                <button class="wallet-button" onclick="connectMetaMask()">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg"
+                        alt="MetaMask">MetaMask
+                </button>
+                <button class="wallet-button" onclick="connectWalletConnect()">
+                    ✅ WalletConnect
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <script src="https://unpkg.com/@walletconnect/web3-provider@1.7.1/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+    <script>
+         // Flusso di energia
+         const energyStream = document.querySelector('.energy-stream');
+        const numElements = 20;
+        for (let i = 0; i < numElements; i++) {
+            const element = document.createElement('span');
+            element.style.left = `${Math.random() * 100}%`;
+            element.style.top = `${Math.random() * 100}%`;
+            element.style.animationDelay = `${Math.random() * 5}s`;
+            energyStream.appendChild(element);
+        }
+
+        function typeEffect(cardTitle, benefit, callback) {
+            let charIndex = 0;
+            let isDeleting = false;
+
+            function type() {
+                const currentText = benefit.substring(0, charIndex);
+                cardTitle.textContent = currentText;
+                cardTitle.classList.add("card-title-animation");
+
+                if (!isDeleting && charIndex < benefit.length) {
+                    charIndex++;
+                    setTimeout(type, 100);
+                } else if (isDeleting && charIndex > 0) {
+                    charIndex--;
+                    setTimeout(type, 50);
+                } else {
+                    isDeleting = !isDeleting;
+                    if (isDeleting) {
+                        setTimeout(function () {
+                            cardTitle.classList.remove("card-title-animation");
+                            callback();
+                        }, 1200);
+                        return;
+                    }
+                    setTimeout(type, 1200);
+                }
+            }
+
+            // Avvia l'animazione
+            setTimeout(type, 0);
+        }
+
+        const cardTitles = document.querySelectorAll('.card-title');
+        const benefits = [
+            "100% free",
+            "All Airdrops, one hub",
+            "Private, secure Web3 access",
+            "Save & track Crypto Projects",
+            "Simplify | Organize | Save time",
+            "Fast | Intuitive",
+            "Customize your Airdrops"
+        ];
+        let currentBenefitIndex = 0;
+
+        function startAnimation() {
+            const cardIndex = currentBenefitIndex % cardTitles.length;
+            const benefit = benefits[currentBenefitIndex % benefits.length];
+            typeEffect(cardTitles[cardIndex], benefit, () => {
+                currentBenefitIndex++;
+                startAnimation();
+            });
+        }
+
+        startAnimation();
+
+        function openModal() {
+            document.getElementById('walletModal').style.display = 'flex';
+        }
+
+        function closeModal(event) {
+            if (event.target.className === 'modal' || event.target.className === 'close-button') {
+                document.getElementById('walletModal').style.display = 'none';
+            }
+        }
+        async function connectMetaMask() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({
+                        method: 'eth_requestAccounts'
+                    });
+                    console.log('MetaMask connected with account:', accounts[0]);
+                    alert(`MetaMask connected with account: ${accounts[0]}`);
+                    closeModal();
+                } catch (error) {
+                    console.error("Could not connect to MetaMask:", error);
+                    alert(`Could not connect to MetaMask: ${error.message}`);
+                }
+            } else {
+                alert("MetaMask is not installed. Please install it to use this feature.");
+            }
+        }
+
+        async function connectWalletConnect() {
+            try {
+                const provider = new WalletConnectProvider.default({
+                    infuraId: "1a58e89199624e228e5a0c73cd93cbb9", // Replace with your Infura ID
+                    qrcodeModalOptions: {
+                        mobileLinks: [
+                            "metamask",
+                            "trust",
+                            "rainbow",
+                        ]
+                    }
+                });
+
+                await provider.enable();
+
+                const web3 = new Web3(provider);
+                const accounts = await web3.eth.getAccounts();
+
+                console.log("WalletConnect connected with account:", accounts[0]);
+                alert(`MetaMask connected with account: ${accounts[0]}`);
+                window.location.href = "dashboard.html";
+
+                closeModal();
+            } catch (error) {
+                console.error("Could not connect to MetaMask:", error);
+                alert(`Could not connect to MetaMask: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+
+</html>
