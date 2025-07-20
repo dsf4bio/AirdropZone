@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - EasyDropZone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <style>
+:root {
+  --primary-color: #050610;
+  --secondary-color: #00ffe0;
+  --text-color: #CCD6F6;
+  --card-bg: #292E3B;
+  --border-color: #444;
+  --hover-color: rgba(100, 255, 218, 0.1);
+  --orbitron-font: 'Orbitron', sans-serif;
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  --side-padding: 1cm;
+  --modal-bg: #333848;
+  --modal-text-color: #d0d0d0;
+  --input-bg: #44495b;
+  --input-border-color: #555a6c;
+  --button-primary-bg: #4CAF50;
+  --button-primary-text: white;
+  --button-danger-bg: #f44336;
+  --button-danger-text: white;
+  --disconnect-button-bg: #ff9800;
+  --disconnect-button-text: white;
+  --max-cards: 110;
+}
+
+/* --- Base generale --- */
+body {
+  font-family: var(--orbitron-font);
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+/* Header */
+.header {
+  background-color: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 0;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  font-size: 1.6rem;
+  margin: 0;
+  color: var(--secondary-color);
+}
+
+/* Profile Area */
+.profile-area {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.profile-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #555;
+  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name {
+  font-size: 1rem;
+  margin: 0;
+  color: var(--secondary-color);
+}
+
+/* Disconnect Wallet Button */
+#disconnect-wallet-btn {
+  background-color: var(--disconnect-button-bg);
+  color: var(--disconnect-button-text);
+  border: none;
+  padding: 0.36rem 0.72rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: var(--orbitron-font);
+  font-size: 0.72rem;
+  transition: background-color 0.3s;
+}
+
+#disconnect-wallet-btn:hover {
+  background-color: #cc7a00;
+}
+
+/* Project Area */
+#project-area {
+  padding: 2rem 0;
+}
+
+#project-area .project-area-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+#project-area h2 {
+  font-size: 2rem;
+  color: var(--secondary-color);
+  margin: 0;
+}
+
+/* Search Bar */
+#search-bar {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border-radius: 5px;
+  font-family: var(--orbitron-font);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  width: 250px;
+}
+
+/* Project List */
+#project-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+}
+
+/* Project Card */
+.project-card {
+  width: 23.2%;
+  min-width: 200px;
+  background-color: var(--card-bg);
+  border-radius: 15px;
+  padding: 1.2rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  height: 150px;
+  border: 3px solid;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  box-sizing: border-box;
+  word-break: break-word;
+}
+
+.modal-expanded-body {
+  word-wrap: break-word;  /* permette di andare a capo se parola lunga */
+  overflow-wrap: break-word;
+  white-space: normal;    /* forza il testo a capo */
+  max-width: 100%;        /* evita overflow orizzontale */
+}
+
+.modal-expanded-body p, 
+.modal-expanded-body h3, 
+.modal-expanded-body ul {
+  word-break: break-word;  /* sicurezza extra per testi e liste */
+  white-space: normal;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+
+/* Bordi colorati a rotazione 5 colori */
+.project-card:nth-child(5n+1) {
+  border-color: #ff6f61;
+}
+.project-card:nth-child(5n+2) {
+  border-color: #6b5b95;
+}
+.project-card:nth-child(5n+3) {
+  border-color: #88b04b;
+}
+.project-card:nth-child(5n+4) {
+  border-color: #f7cac9;
+}
+.project-card:nth-child(5n+5) {
+  border-color: #92a8d1;
+}
+
+.project-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.project-card h3 {
+  font-size: 1.1rem;
+  margin: 0.3rem 0;
+  color: var(--secondary-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
+  z-index: 2;
+  text-transform: uppercase;
+}
+
+.creation-date {
+  position: relative;
+  font-size: 0.8rem;
+  color: #aaa;
+  margin-top: 0.3rem;
+  z-index: 2;
+}
+
+/* Icona espandi visibile sempre */
+.expand-button {
+  background: none;
+  border: none;
+  color: var(--secondary-color);
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: color 0.3s;
+  padding: 0.4rem;
+  border-radius: 7px;
+  z-index: 3;
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+}
+
+.expand-button:hover {
+  color: #fff;
+  background-color: var(--hover-color);
+}
+
+/* Add New Project Button */
+#add-new-project-btn {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  padding: 0.675rem 1.35rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: var(--orbitron-font);
+  font-size: 0.9rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#add-new-project-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background-color: var(--modal-bg);
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 1.6rem;
+  border-radius: 10px;
+  box-shadow: var(--box-shadow);
+  position: relative;
+  color: var(--modal-text-color);
+  overflow: auto;
+  font-size: 0.85rem;
+}
+
+/* --- FORM MODALE MIGLIORATO --- */
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-content form label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--secondary-color);
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modal-content form input[type="text"],
+.modal-content form textarea {
+  background-color: var(--input-bg);
+  border: 1.5px solid var(--input-border-color);
+  border-radius: 8px;
+  color: var(--text-color);
+  padding: 0.7rem 0.9rem;
+  font-family: var(--orbitron-font);
+  font-size: 0.9rem;
+  resize: vertical;
+  transition: border-color 0.3s;
+}
+
+.modal-content form input[type="text"]:focus,
+.modal-content form textarea:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+.modal-content form textarea {
+  min-height: 80px;
+  max-height: 180px;
+  line-height: 1.3;
+}
+
+.dynamic-fields-container {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.7rem;
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: var(--input-bg);
+}
+
+.dynamic-fields-container label {
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+  margin-bottom: 0.5rem;
+  display: block;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dynamic-field {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.dynamic-field input {
+  flex-grow: 1;
+  padding: 0.5rem 0.75rem;
+  font-family: var(--orbitron-font);
+  font-size: 0.85rem;
+  color: var(--text-color);
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border-color);
+  border-radius: 6px;
+  transition: border-color 0.3s;
+}
+
+.dynamic-field input:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+.dynamic-field button {
+  background-color: var(--button-danger-bg);
+  color: var(--button-danger-text);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0 0.8rem;
+  font-size: 0.85rem;
+  transition: background-color 0.3s;
+}
+
+.dynamic-field button:hover {
+  background-color: #cc392f;
+}
+
+/* Modal header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.8rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: var(--secondary-color);
+  font-size: 1.6rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 1.6rem;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  transition: color 0.3s;
+}
+
+.modal-close:hover {
+  color: #fff;
+}
+
+.modal-body {
+  overflow-wrap: break-word;
+}
+
+.modal-actions {
+  margin-top: 1.6rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Buttons */
+.action-btn {
+  background: none;
+  border: 1px solid var(--secondary-color);
+  color: var(--secondary-color);
+  padding: 0.6rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--orbitron-font);
+  font-size: 0.8rem;
+}
+
+.action-btn:hover {
+  background-color: var(--hover-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.save-button {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  border: none;
+}
+
+.delete-button {
+  background-color: var(--button-danger-bg);
+  color: var(--button-danger-text);
+  border: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  #project-list {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .profile {
+    padding-left: 0.5rem;
+  }
+
+  .header h1 {
+    font-size: 1.2rem;
+  }
+
+  #project-list {
+    justify-content: center; /* centra le card */
+  }
+
+  .project-card {
+    width: 100%;              /* card larga quasi tutto il contenitore */
+    max-width: 500px;         /* ma non troppo larga su tablet */
+    margin: 0 auto;           /* centratura perfetta */
+  }
+}
+
+button.disabled {
+  background-color: #aaa !important;
+  cursor: not-allowed !important;
+  opacity: 0.7;
+}
+
+@media (max-width: 480px) {
+  .project-card {
+    width: 100%;
+  }
+
+  .header h1 {
+    font-size: 1.1rem;
+  }
+
+  .profile-name {
+    font-size: 0.9rem;
+  }
+
+  .modal-content {
+    margin: 10px;
+  }
+}
+
+a {
+  color: #75afff;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1024px) {
+  .project-card {
+    width: 31%; /* 3 per riga */
+  }
+}
+
+  </style>
+</head>
+
+<body>
+    <header>
+      <div class="container flex-row space-between">
+        <div class="profile-area">
+          <div class="profile-image"><span>🪂</span></div>
+          <div class="profile-details">
+            <h2 class="profile-name">Airdrop Hunter</h2>
+          </div>
+        </div>
+        <h1>EasyDropZone</h1>
+        <div style="display: flex; flex-direction: column; align-items: flex-end;">
+          <button id="disconnect-wallet-btn">Disconnect Wallet</button>
+          <div id="wallet-abbreviated" style="margin-top: 4px; font-size: 0.8rem; color: var(--secondary-color);"></div>
+        </div>
+      </div>
+    </header>
+  
+    <section id="project-area" class="container">
+      <div class="project-area-header">
+        <h2>Your Projects</h2>
+        <span id="card-count">Total Cards: 0</span>
+        <button id="add-new-project-btn">
+          <i class="fas fa-plus-circle"></i> Add New Project
+        </button>
+      </div>
+      <input
+        type="text"
+        id="search-bar"
+        placeholder="Search by project name"
+        maxlength="60"
+      />
+      <div id="project-list"></div>
+    </section>
+  
+    <!-- Modal Add/Edit Project -->
+    <div id="form-modal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modal-title">Add New Project</h2>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="project-form">
+            <input type="hidden" id="project-id" value="" />
+  
+            <label for="project-name">Project Name *</label>
+            <input
+              id="project-name"
+              name="project-name"
+              type="text"
+              required
+              maxlength="60"
+              placeholder="Enter project name"
+            />
+  
+            <label for="project-description">Description</label>
+            <textarea
+              id="project-description"
+              name="project-description"
+              maxlength="250"
+              placeholder="Write a short description (max 250 chars)"
+            ></textarea>
+  
+            <div class="form-group">
+              <label>Links (max 10)</label>
+              <div id="link-fields"></div>
+              <button type="button" id="add-link-btn">Add Link</button>
+            </div>
+  
+            <div class="form-group">
+              <label>Wallets (max 10)</label>
+              <div id="wallet-fields"></div>
+              <button type="button" id="add-wallet-btn">Add Wallet</button>
+            </div>
+          </form>
+        </div>
+  
+        <div class="modal-actions">
+          <button class="action-btn save-button" id="save-project-btn">Save</button>
+          <button class="action-btn delete-button" id="delete-project-btn" style="display:none;">Delete</button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Modal Project Details -->
+    <div id="expanded-modal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="expanded-modal-title">Project Details</h2>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-expanded-body">
+          <h3 id="expanded-project-name"></h3>
+          <p id="expanded-creation-date"></p>
+          <p id="expanded-project-description"></p>
+          <h4>Links:</h4>
+          <ul id="expanded-links-list"></ul>
+          <h4>Wallets:</h4>
+          <ul id="expanded-wallets-list"></ul>
+        </div>
+        <div class="modal-actions">
+          <button class="action-btn" id="edit-project-from-expanded-btn">Edit</button>
+        </div>
+      </div>
+    </div>
+  
+    <script type="module">
+      import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  
+      const supabase = createClient(
+        'https://hazsagekjopuvxknqoxa.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhenNhZ2Vram9wdXZ4a25xb3hhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4NTU0OTEsImV4cCI6MjA2ODQzMTQ5MX0.YtDigClmc8xm_Mdm83T9o7FNlZ_7FmvTUmXTcwtrYQ8'
+      );
+  
+      const wallet = localStorage.getItem('wallet');
+      const user_id = localStorage.getItem('user_id');
+  
+      // Redirect to login if no wallet or user_id
+      function redirectToLogin() {
+        localStorage.clear();
+        window.location.href = '/index.html';
+      }
+  
+      if (!wallet || !user_id) {
+        redirectToLogin();
+      }
+
+      
+  
+// Elements
+const walletAbbreviatedEl = document.getElementById('wallet-abbreviated');
+const disconnectBtn = document.getElementById('disconnect-wallet-btn');
+const addNewProjectBtn = document.getElementById('add-new-project-btn');
+const searchBar = document.getElementById('search-bar');
+const projectListEl = document.getElementById('project-list');
+const cardCountEl = document.getElementById('card-count');
+
+const formModal = document.getElementById('form-modal');
+const expandedModal = document.getElementById('expanded-modal');
+const modalTitle = document.getElementById('modal-title');
+const projectForm = document.getElementById('project-form');
+
+const projectIdInput = document.getElementById('project-id');
+const projectNameInput = document.getElementById('project-name');
+const projectDescriptionInput = document.getElementById('project-description');
+const linkFieldsContainer = document.getElementById('link-fields');
+const walletFieldsContainer = document.getElementById('wallet-fields');
+const saveProjectBtn = document.getElementById('save-project-btn');
+const deleteProjectBtn = document.getElementById('delete-project-btn');
+
+const expandedProjectName = document.getElementById('expanded-project-name');
+const expandedCreationDate = document.getElementById('expanded-creation-date');
+const expandedProjectDescription = document.getElementById('expanded-project-description');
+const expandedLinksList = document.getElementById('expanded-links-list');
+const expandedWalletsList = document.getElementById('expanded-wallets-list');
+const editProjectFromExpandedBtn = document.getElementById('edit-project-from-expanded-btn');
+
+// Format wallet abbreviato
+function formatWallet(addr) {
+  if (!addr) return '';
+  return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
+}
+walletAbbreviatedEl.textContent = formatWallet(wallet);
+
+// Logout con conferma
+disconnectBtn.addEventListener('click', () => {
+  if (confirm('Disconnetti wallet?')) {
+    localStorage.clear();
+    window.location.href = '/index.html';
+  }
+});
+
+// Utility: crea input link o wallet (max 10)
+function createDynamicField(container, placeholder, type) {
+  if (container.children.length >= 10) return;
+
+  const fieldWrapper = document.createElement('div');
+  fieldWrapper.className = 'dynamic-field';
+
+  const input = document.createElement('input');
+  input.required = true;
+  input.maxLength = 150;
+  input.placeholder = placeholder;
+
+  if (type === 'link') {
+    input.type = 'url';
+    input.title = 'Inserisci un URL valido (es: https://...)';
+  } else if (type === 'wallet') {
+    input.type = 'text';
+    input.pattern = '^[a-zA-Z0-9]+$';
+    input.title = 'Solo caratteri alfanumerici';
+  }
+
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.innerHTML = '&times;';
+  removeBtn.title = 'Rimuovi';
+  removeBtn.onclick = () => container.removeChild(fieldWrapper);
+
+  fieldWrapper.appendChild(input);
+  fieldWrapper.appendChild(removeBtn);
+  container.appendChild(fieldWrapper);
+
+  return input;
+}
+
+// Aggiungi link o wallet
+document.getElementById('add-link-btn').addEventListener('click', () => {
+  createDynamicField(linkFieldsContainer, 'https://example.com/…', 'link');
+});
+document.getElementById('add-wallet-btn').addEventListener('click', () => {
+  createDynamicField(walletFieldsContainer, '0x1234…abcd', 'wallet');
+});
+
+// Apri form modal (nuovo progetto)
+function openFormModal() {
+  modalTitle.textContent = 'Add New Project';
+  projectIdInput.value = '';
+  projectNameInput.value = '';
+  projectDescriptionInput.value = '';
+  linkFieldsContainer.innerHTML = '';
+  walletFieldsContainer.innerHTML = '';
+  deleteProjectBtn.style.display = 'none';
+  formModal.style.display = 'block';
+}
+addNewProjectBtn.addEventListener('click', openFormModal);
+
+// Chiudi modale (form o expanded)
+function closeModal() {
+  formModal.style.display = 'none';
+}
+function closeExpandedModal() {
+  expandedModal.style.display = 'none';
+}
+
+// Gestisci chiusura modali con pulsanti X
+document.querySelectorAll('.modal-close').forEach(btn => {
+  btn.addEventListener('click', () => {
+    closeModal();
+    closeExpandedModal();
+  });
+});
+
+// Verifica utente e carica progetti
+async function init() {
+  // Controlla che wallet sia in users
+  const { data: user, error: userError } = await supabase
+    .from('users')
+    .select('id')
+    .eq('wallet_address', wallet)
+    .single();
+
+  if (userError || !user || user.id !== user_id) {
+    redirectToLogin();
+    return;
+  }
+
+  await loadProjects();
+}
+
+// Cache dei progetti
+let projectsCache = [];
+
+// Carica progetti
+async function loadProjects() {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('user_id', user_id)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    alert('Errore nel caricamento dei progetti.');
+    console.error(error);
+    return;
+  }
+
+  projectsCache = data || [];
+  renderProjectList(projectsCache);
+}
+
+// Renderizza lista progetti
+function renderProjectList(projects) {
+  projectListEl.innerHTML = '';
+  cardCountEl.textContent = `Total Cards: ${projects.length}`;
+
+  if (projects.length === 0) {
+    projectListEl.innerHTML = '<p>No projects found.</p>';
+    return;
+  }
+
+  projects.forEach(proj => {
+    const card = document.createElement('div');
+    card.className = 'project-card';
+    card.tabIndex = 0;
+
+    // Format date
+    const createdAtFormatted = new Date(proj.created_at).toLocaleDateString('it-IT');
+
+    // Card HTML solo con nome, data e bottone espandi con icona unicode [ ]
+    card.innerHTML = `
+      <h3>${proj.project_name}</h3>
+      <p class="creation-date">${createdAtFormatted}</p>
+      <button class="expand-button" title="Mostra dettagli progetto">[|||]</button>
+    `;
+
+    // Evento apri modale dettagli solo sul bottone expand
+    card.querySelector('.expand-button').addEventListener('click', () => openExpandedModal(proj));
+
+    projectListEl.appendChild(card);
+  });
+}
+
+// Filtro di ricerca
+searchBar.addEventListener('input', () => {
+  const term = searchBar.value.toLowerCase();
+  const filtered = projectsCache.filter(p => p.project_name.toLowerCase().includes(term));
+  renderProjectList(filtered);
+});
+
+// Apri modale dettagli progetto
+function openExpandedModal(project) {
+  expandedProjectName.textContent = project.project_name;
+  expandedProjectDescription.textContent = project.project_description || '(No description)';
+  expandedCreationDate.textContent = `Created at: ${new Date(project.created_at).toLocaleString()}`;
+
+  expandedLinksList.innerHTML = '';
+  if (Array.isArray(project.links) && project.links.length) {
+    project.links.forEach(link => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = link;
+      a.textContent = link;
+      a.target = '_blank';
+      li.appendChild(a);
+      expandedLinksList.appendChild(li);
+    });
+  } else {
+    expandedLinksList.innerHTML = '<li>No links</li>';
+  }
+
+  expandedWalletsList.innerHTML = '';
+  if (Array.isArray(project.wallets) && project.wallets.length) {
+    project.wallets.forEach(w => {
+      const li = document.createElement('li');
+      li.textContent = w;
+      expandedWalletsList.appendChild(li);
+    });
+  } else {
+    expandedWalletsList.innerHTML = '<li>No wallets</li>';
+  }
+
+  expandedModal.style.display = 'block';
+  expandedModal.currentProject = project;
+}
+
+// Apri modale modifica da dettagli
+editProjectFromExpandedBtn.addEventListener('click', () => {
+  if (!expandedModal.currentProject) return;
+  openEditModal(expandedModal.currentProject);
+  closeExpandedModal();
+});
+
+// Apri modale modifica progetto
+function openEditModal(project) {
+  modalTitle.textContent = 'Edit Project';
+  projectIdInput.value = project.id;
+  projectNameInput.value = project.project_name;
+  projectDescriptionInput.value = project.project_description || '';
+  linkFieldsContainer.innerHTML = '';
+  walletFieldsContainer.innerHTML = '';
+
+  if (Array.isArray(project.links)) {
+    project.links.forEach(link => {
+      createDynamicField(linkFieldsContainer, 'https://example.com/…', 'link').value = link;
+    });
+  }
+  if (Array.isArray(project.wallets)) {
+    project.wallets.forEach(w => {
+      createDynamicField(walletFieldsContainer, '0x1234…abcd', 'wallet').value = w;
+    });
+  }
+
+  deleteProjectBtn.style.display = 'inline-block';
+  formModal.style.display = 'block';
+}
+
+// Salva progetto (crea o aggiorna)
+saveProjectBtn.addEventListener('click', async () => {
+  const id = projectIdInput.value.trim();
+  const name = projectNameInput.value.trim();
+
+  if (!name) {
+    alert('Project name is required.');
+    return;
+  }
+
+  const description = projectDescriptionInput.value.trim();
+
+  // Validazione link e wallet con check HTML5
+  const linksInputs = [...linkFieldsContainer.querySelectorAll('input')];
+  for (const input of linksInputs) {
+    if (!input.checkValidity()) {
+      alert(`Link non valido: ${input.value}`);
+      input.focus();
+      return;
+    }
+  }
+  const walletsInputs = [...walletFieldsContainer.querySelectorAll('input')];
+  for (const input of walletsInputs) {
+    if (!input.checkValidity()) {
+      alert(`Wallet non valido: ${input.value}`);
+      input.focus();
+      return;
+    }
+  }
+
+  const links = linksInputs
+    .map(i => i.value.trim())
+    .filter(v => v.length > 0);
+
+  const wallets = walletsInputs
+    .map(i => i.value.trim())
+    .filter(v => v.length > 0);
+
+  const projectData = {
+    project_name: name,
+    project_description: description,
+    links,
+    wallets,
+    user_id,
+  };
+
+  if (id) {
+    const { error } = await supabase
+      .from('projects')
+      .update(projectData)
+      .eq('id', id);
+
+    if (error) {
+      alert('Errore aggiornando progetto: ' + error.message);
+      return;
+    }
+  } else {
+    const { error } = await supabase
+      .from('projects')
+      .insert(projectData);
+
+    if (error) {
+      alert('Errore creando progetto: ' + error.message);
+      return;
+    }
+  }
+
+  closeModal();
+  await loadProjects();
+});
+
+// Cancella progetto
+deleteProjectBtn.addEventListener('click', async () => {
+  if (!projectIdInput.value) return;
+  if (!confirm('Sei sicuro di voler eliminare questo progetto?')) return;
+
+  const { error } = await supabase
+    .from('projects')
+    .delete()
+    .eq('id', projectIdInput.value);
+
+  if (error) {
+    alert('Errore eliminando progetto: ' + error.message);
+    return;
+  }
+
+  closeModal();
+  await loadProjects();
+});
+
+// Avvia tutto
+init();
+        </script>
+  
+    <!-- Footer e resto del codice (rimane invariato) -->
+
+    <style>
+        footer {
+          width: 100%;
+          padding: 2rem 1rem;
+          background-color: #0a0a0a;
+          color: var(--text-color);
+          font-family: var(--orbitron);
+          text-align: center;
+          border-top: 1px solid rgba(0, 255, 224, 0.2);
+          box-shadow: 0 -2px 20px rgba(0, 255, 224, 0.2);
+          margin-top: auto;
+        }
+      
+        footer p {
+          margin-bottom: 1rem;
+          font-size: 0.7rem;
+          opacity: 0.85;
+        }
+      
+        .donation-section {
+          max-width: 700px;
+          margin: 0 auto;
+        }
+      
+        .support-text {
+          font-size: 0.8rem;
+          margin-bottom: 1rem;
+          color: var(--secondary-color);
+          text-shadow: 0 0 8px var(--secondary-color);
+        }
+      
+        .wallet-row {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          margin-bottom: 0.8rem;
+          flex-wrap: wrap;
+        }
+      
+        .wallet-label {
+          font-weight: bold;
+          color: var(--secondary-color);
+          min-width: 36px;
+          font-size: 0.7rem;
+        }
+      
+        .wallet-address {
+          font-size: 0.7rem;
+          word-break: break-all;
+          background: rgba(255, 255, 255, 0.05);
+          padding: 0.3rem 0.6rem;
+          border-radius: 6px;
+          font-family: monospace;
+          border: 1px solid rgba(0, 255, 224, 0.2);
+        }
+      
+        .copy-btn {
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          padding: 0.2rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--secondary-color);
+          transition: transform 0.2s ease;
+        }
+      
+        .copy-btn svg {
+          width: 14px;
+          height: 14px;
+          fill: var(--secondary-color);
+          transition: fill 0.2s ease;
+        }
+      
+        .copy-btn:hover {
+          transform: scale(1.1);
+        }
+      
+        .copy-btn:hover svg {
+          fill: #ffffff;
+        }
+      
+        .copy-alert {
+          position: fixed;
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: var(--secondary-color);
+          color: #000;
+          padding: 0.5rem 1rem;
+          border-radius: 6px;
+          font-size: 0.75rem;
+          font-weight: bold;
+          box-shadow: 0 0 12px var(--secondary-color);
+          z-index: 1000;
+          display: none;
+        }
+        .modal-expanded-body {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-width: 100%;
+}
+
+.modal-expanded-body p, 
+.modal-expanded-body h3, 
+.modal-expanded-body ul {
+  word-break: break-word;
+  white-space: normal;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+      </style>
+      
+      <footer>
+        <p>&copy; 2025 EasyDropZone. All rights reserved.</p>
+      
+        <div class="donation-section">
+          <p class="support-text">Support this project 💛</p>
+      
+          <div class="wallet-row">
+            <span class="wallet-label">BTC:</span>
+            <span class="wallet-address" id="btc-address">bc1p7gwjm8qjmp46rkae3kn7yuvwmfzw74c6weu5za3kpug9vh4xm74q9vaks8</span>
+            <button class="copy-btn" onclick="copyToClipboard('btc-address')" title="Copy BTC address">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 18H8V7h11v16z"/>
+              </svg>
+            </button>
+          </div>
+      
+          <div class="wallet-row">
+            <span class="wallet-label">ETH:</span>
+            <span class="wallet-address" id="eth-address">0xa69dC775d4b6D35f9F84438F7Ec5a3aFd0e31b0b</span>
+            <button class="copy-btn" onclick="copyToClipboard('eth-address')" title="Copy ETH address">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 18H8V7h11v16z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </footer>
+      
+      <div class="copy-alert" id="copy-alert">Copied!</div>
+      
+      <script>
+        function copyToClipboard(elementId) {
+          const text = document.getElementById(elementId).textContent;
+          navigator.clipboard.writeText(text).then(() => {
+            const alert = document.getElementById('copy-alert');
+            alert.style.display = 'block';
+            setTimeout(() => {
+              alert.style.display = 'none';
+            }, 1800);
+          });
+        }
+    
+      </script>
+        </body>
+        </html>  
