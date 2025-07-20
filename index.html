@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Easy Drop Zone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #000000;
+      --secondary-color: #00ffe0;
+      --text-color: #ffffff;
+      --muted-text: #a0d9d9cc;
+      --card-bg: rgba(26, 31, 43, 0.85);
+      --button-bg: #00ffe0;
+      --button-text: #000;
+      --orbitron: 'Orbitron', sans-serif;
+      --shadow-glow: 0 0 12px var(--secondary-color), 0 0 24px var(--secondary-color);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html,
+    body {
+      height: 100%;
+      font-family: var(--orbitron);
+      background-color: var(--primary-color);
+      color: var(--text-color);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      user-select: none;
+    }
+    #bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: #000;
+    }
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0.75rem;
+      color: var(--secondary-color);
+      text-shadow: var(--shadow-glow);
+      letter-spacing: 0.1em;
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%,
+      100% {
+        text-shadow: 0 0 12px var(--secondary-color), 0 0 30px var(--secondary-color);
+      }
+      50% {
+        text-shadow: 0 0 20px var(--secondary-color), 0 0 60px var(--secondary-color);
+      }
+    }
+    p.description {
+      font-size: 1.1rem;
+      max-width: 720px;
+      margin-bottom: 2.5rem;
+      color: var(--muted-text);
+      line-height: 2;
+    }
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      max-width: 90vw;
+      margin-bottom: 3rem;
+    }
+    .card {
+      width: 150px;
+      height: 150px;
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 255, 224, 0.4);
+      border-radius: 16px;
+      box-shadow: 0 0 16px var(--secondary-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: transform 0.3s ease, box-shadow 0.4s ease;
+      backdrop-filter: blur(8px);
+    }
+    .card:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 36px var(--secondary-color);
+    }
+    .card img {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 10px;
+      pointer-events: none;
+    }
+    .card-label {
+      color: var(--secondary-color);
+      text-shadow: 0 0 6px var(--secondary-color);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      font-size: 1rem;
+    }
+    .connect-button {
+      background-color: var(--button-bg);
+      color: var(--button-text);
+      border: none;
+      padding: 0.8rem 2.2rem;
+      font-size: 1.1rem;
+      border-radius: 40px;
+      font-family: var(--orbitron);
+      font-weight: 600;
+      box-shadow: var(--shadow-glow);
+      transition: all 0.25s ease;
+      margin-bottom: 8vh;
+      cursor: pointer;
+    }
+    .connect-button:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0 24px var(--secondary-color), 0 0 50px var(--secondary-color);
+    }
+    .connect-button:active {
+      transform: scale(0.96);
+      box-shadow: 0 0 18px var(--secondary-color);
+    }
+    .connect-button {
+    position: relative;
+    padding-right: 40px; /* spazio per il loader */
+  }
+
+  #loader {
+  display: none;
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(0, 255, 224, 0.2);
+  border-top: 3px solid var(--secondary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px auto; /* centra e spazio sotto */
+}
+
+
+  @keyframes spin {
+    0% { transform: translateY(-50%) rotate(0deg); }
+    100% { transform: translateY(-50%) rotate(360deg); }
+  }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+  <h1>Easy Drop Zone</h1>
+  <p class="description">
+    <strong>All your airdrops.</strong> One dashboard. <strong>Zero fees.</strong> No KYC. No accounts.
+    Just connect your <strong>wallet</strong> and unlock the <strong>Web3</strong> world.
+  </p>
+
+  <div class="card-container">
+    <div class="card">
+      <img src="https://i.postimg.cc/MK0wLJfJ/Pngtree-stock-market-fluctuation-graph-5485381.png" alt="Coins" />
+      <div class="card-label">Easy</div>
+    </div>
+    <div class="card">
+      <img src="https://i.postimg.cc/L5HYZBrJ/Pngtree-flying-parachute-in-cartoon-style-5473975.png" alt="Drop" />
+      <div class="card-label">Drop</div>
+    </div>
+    <div class="card">
+      <img src="https://i.postimg.cc/MHPTfk7L/Pngtree-digital-wallet-for-exchange-crypto-6335128.png" alt="Zone" />
+      <div class="card-label">Zone</div>
+    </div>
+  </div>
+
+  <button class="connect-button" id="connectWallet">
+    Connect Wallet
+    <div id="loader"></div>
+  </button>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  
+    const supabase = createClient(
+      'https://hazsagekjopuvxknqoxa.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhenNhZ2Vram9wdXZ4a25xb3hhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4NTU0OTEsImV4cCI6MjA2ODQzMTQ5MX0.YtDigClmc8xm_Mdm83T9o7FNlZ_7FmvTUmXTcwtrYQ8'
+    );
+  
+    const connectButton = document.getElementById('connectWallet');
+    const loader = document.getElementById('loader');
+  
+    connectButton.addEventListener('click', async () => {
+      try {
+        connectButton.disabled = true;
+        loader.style.display = 'inline-block';
+  
+        if (!window.ethereum) throw new Error("MetaMask non installato.");
+  
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const wallet = accounts[0];
+  
+        const message = `Login con wallet ${wallet} alle ${new Date().toISOString()}`;
+        const signature = await window.ethereum.request({
+          method: 'personal_sign',
+          params: [message, wallet],
+        });
+  
+        // Cerca utente esistente
+        const { data: user, error: userError } = await supabase
+          .from('users')
+          .select('id')
+          .eq('wallet_address', wallet)
+          .maybeSingle();
+  
+        let user_id;
+  
+        if (userError) throw new Error(userError.message);
+  
+        if (user) {
+          user_id = user.id;
+        } else {
+          // Inserisce nuovo utente
+          const { data: newUser, error: insertError } = await supabase
+            .from('users')
+            .insert({ wallet_address: wallet })
+            .select('id')
+            .single();
+  
+          if (insertError) throw new Error(insertError.message);
+          user_id = newUser.id;
+        }
+  
+        localStorage.setItem('wallet', wallet);
+        localStorage.setItem('user_id', user_id);
+  
+        window.location.href = '/dashboard.html';
+  
+      } catch (error) {
+        alert("Errore: " + error.message);
+        console.error(error);
+      } finally {
+        connectButton.disabled = false;
+        loader.style.display = 'none';
+      }
+    });
+  </script>
+  
+  
+<!-- Background animation -->
+<script>
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let width, height;
+
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const points = [];
+  const POINT_COUNT = 50;
+  const MAX_DISTANCE = 150;
+
+  class Point {
+    constructor(x, y, vx, vy) {
+      this.x = x;
+      this.y = y;
+      this.vx = vx;
+      this.vy = vy;
+    }
+    move() {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x < 0 || this.x > width) this.vx *= -1;
+      if (this.y < 0 || this.y > height) this.vy *= -1;
+    }
+  }
+
+  function dist(p1, p2) {
+    return Math.hypot(p1.x - p2.x, p1.y - p2.y);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    points.forEach((p) => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,255,224,0.7)';
+      ctx.fill();
+    });
+    for (let i = 0; i < POINT_COUNT; i++) {
+      for (let j = i + 1; j < POINT_COUNT; j++) {
+        const d = dist(points[i], points[j]);
+        if (d < MAX_DISTANCE) {
+          ctx.beginPath();
+          ctx.moveTo(points[i].x, points[i].y);
+          ctx.lineTo(points[j].x, points[j].y);
+          ctx.strokeStyle = `rgba(0,255,224,${1 - d / MAX_DISTANCE})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function animate() {
+    points.forEach((p) => p.move());
+    draw();
+    requestAnimationFrame(animate);
+  }
+
+  for (let i = 0; i < POINT_COUNT; i++) {
+    points.push(
+      new Point(
+        Math.random() * width,
+        Math.random() * height,
+        (Math.random() - 0.5) * 0.7,
+        (Math.random() - 0.5) * 0.7
+      )
+    );
+  }
+
+  animate();
+</script>
+</body>
+</html>
