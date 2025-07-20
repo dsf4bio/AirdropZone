@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,36 +135,7 @@
       transform: scale(0.96);
       box-shadow: 0 0 18px var(--secondary-color);
     }
-    .connect-button {
-    position: relative;
-    padding-right: 40px; /* spazio per il loader */
-  }
-
-  #loader {
-  display: none;
-  width: 24px;
-  height: 24px;
-  border: 3px solid rgba(0, 255, 224, 0.2);
-  border-top: 3px solid var(--secondary-color);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 10px auto; /* centra e spazio sotto */
-}
-
-
-  @keyframes spin {
-    0% { transform: translateY(-50%) rotate(0deg); }
-    100% { transform: translateY(-50%) rotate(360deg); }
-  }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
+    
   </style>
 </head>
 <body>
@@ -190,7 +165,7 @@
 
   <button class="connect-button" id="connectWallet">
     Connect Wallet
-    <div id="loader"></div>
+
   </button>
 
   <script type="module">
@@ -202,13 +177,12 @@
     );
   
     const connectButton = document.getElementById('connectWallet');
-    const loader = document.getElementById('loader');
   
     connectButton.addEventListener('click', async () => {
       try {
         connectButton.disabled = true;
-        loader.style.display = 'inline-block';
-  
+    
+
         if (!window.ethereum) throw new Error("MetaMask non installato.");
   
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -255,7 +229,7 @@
         console.error(error);
       } finally {
         connectButton.disabled = false;
-        loader.style.display = 'none';
+  
       }
     });
   </script>
